@@ -1,4 +1,6 @@
 from enum import Enum
+from leafnode import LeafNode
+from operator import itemgetter
 '''
 text (plain)
 **Bold text**
@@ -8,7 +10,7 @@ Links, in this format: [anchor text](url)
 Images, in this format: ![alt text](url)
 '''
 class TextType(Enum):
-    PLAIN = "plain"
+    TEXT = "TEXT"
     BOLD = "bold"
     ITALIC = "italic"
     CODE = "code"
@@ -27,4 +29,21 @@ class TextNode():
     
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
+    
+def text_node_to_html_node(text_node: TextNode):
+    text, text_type, url = text_node.text, text_node.text_type, text_node.url
+    match text_type:
+        case TextType.TEXT:
+            return LeafNode(None, text)
+        case TextType.BOLD:
+            return LeafNode("b", text)
+        case TextType.ITALIC:
+            return LeafNode("i", text)
+        case TextType.CODE:
+            return LeafNode("code", text)
+        case TextType.LINK:
+            return LeafNode("a", text, { "href": url })
+        case TextType.IMAGE:
+            return LeafNode("img", '', { "src": url, "alt": text})
+    raise Exception()
         
