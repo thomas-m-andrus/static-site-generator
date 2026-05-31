@@ -1,6 +1,6 @@
 from enum import Enum
 from leafnode import LeafNode
-from operator import itemgetter
+
 '''
 text (plain)
 **Bold text**
