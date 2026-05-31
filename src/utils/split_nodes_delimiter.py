@@ -21,20 +21,28 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
                     isDelimited = not isDelimited
     return updated_nodes
 
-def extract_next(result: list[str | int],text:str, patterns: list[str], idx: int = 0):
-    if len(patterns) == 0:
-        return result
-    pattern = patterns[0]
-    extracted = text.split(pattern,1)
-    if len(extracted) == 1:
-        raise ValueError(f"patterns do not align with text; text: '{text}', pattern: '{pattern}', idx: {idx}")
-    if extracted == ['', '']:
-        result.append(idx)
-        return result
-    result.extend([extracted[0], idx])
-    if extracted[1] == '':
-        return result
-    return extract_next(result, extracted[1], patterns[1:], idx+1)
+def extract_next(result: list[str | int],text:str, patterns: list[str]):
+    new_nodes = []
+    text_to_split = text
+    last = len(patterns) - 1
+    for index, pattern in enumerate(patterns):
+        fragments = text_to_split.split(pattern, 1)
+        indent = ""
+        for i in range(index+1):
+            indent = f"{indent}      "
+        if fragments == ["",""]:
+            new_nodes.append(index)
+        elif fragments[0] == "":
+            new_nodes.append(index)
+            text_to_split = fragments[1]
+        elif fragments[1] == "":
+            new_nodes.extend([fragments[0], index])
+        elif index == last:
+            new_nodes.extend([fragments[0], index, fragments[1]])
+        else:
+            new_nodes.extend([fragments[0], index])
+            text_to_split = fragments[1]
+    return new_nodes
     
 
 def split_url_nodes(extract_from_pattern, format_pattern, text_type: TextType):
@@ -68,3 +76,18 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
 
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     return split_url_nodes(extract_markdown_images, lambda content, url: f"![{content}]({url})", TextType.IMAGE)(old_nodes)
+
+def text_to_textnodes(text:str) -> list[TextNode]:
+    first_node = TextNode(text, TextType.TEXT)
+    splits = [
+        [TextType.BOLD,"**"],
+        [TextType.CODE, "`"],
+        [TextType.ITALIC, "_"],
+    ]
+    result = [first_node]
+    for case in splits:
+        text_type, delimiter = case
+        result = split_nodes_delimiter(result, delimiter,text_type)
+    result = split_nodes_link(result)
+    result = split_nodes_image(result)
+    return result
