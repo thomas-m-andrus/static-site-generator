@@ -48,7 +48,7 @@ class TestSplitNodesDelimiter(unittest.TestCase):
     def test_extract_next(self):
         text_1 = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
         patterns_1 = ['[to boot dev](https://www.boot.dev)', '[to youtube](https://www.youtube.com/@bootdotdev)']
-        result_1 = extract_next([],text_1, patterns_1)
+        result_1 = extract_next(text_1, patterns_1)
         self.assertListEqual(result_1, [
             "This is text with a link ",
             0,
@@ -57,7 +57,7 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         ])
         text_2 = "Check this ![image](url)"
         patterns_2 = ["![image](url)"]
-        result_2 = extract_next([], text_2, patterns_2)
+        result_2 = extract_next(text_2, patterns_2)
         self.assertListEqual(result_2, ["Check this ", 0])
     
     def test_split_nodes_image(self):

@@ -21,7 +21,7 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
                     isDelimited = not isDelimited
     return updated_nodes
 
-def extract_next(result: list[str | int],text:str, patterns: list[str]):
+def extract_next(text:str, patterns: list[str]):
     new_nodes = []
     text_to_split = text
     last = len(patterns) - 1
@@ -61,7 +61,7 @@ def split_url_nodes(extract_from_pattern, format_pattern, text_type: TextType):
                     for extract in extracted:
                         content, url = extract
                         patterns.append(format_pattern(content, url))
-                    fragments = extract_next([], text, patterns)
+                    fragments = extract_next(text, patterns)
                     for fragment in fragments:
                         if isinstance(fragment,str):
                             updated_nodes.append(TextNode(fragment, TextType.TEXT))
