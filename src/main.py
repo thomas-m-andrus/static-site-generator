@@ -59,10 +59,11 @@ def generate_page(from_path:str, template_path:str, dest_path:str):
     template_file = open(template_path).read()
     md = markdown_to_html_node(from_file)
     html = md.to_html()
-    title = extract_title(md)
+    title = extract_title(from_file)
     template_file.replace('{{ Title }}', title).replace('{{ Content }}', html)
     path = os.path.dirname(dest_path)
-    if path != '':
+    print(path, os.path.exists(path))
+    if path != '' and not os.path.exists(path):
         os.makedirs(path)
     try:
         with open(dest_path, 'x') as f:
