@@ -77,23 +77,22 @@ def generate_page(from_path:str, template_path:str, dest_path:str):
             f.write(template_file)
     except FileExistsError:
         print("The file already exists.")
-        
-def generate_pages(pathSrc: str):
-    existing_path = os.path.join(dir_path_content, pathSrc)
-    if not os.path.exists(existing_path) or len(os.listdir(existing_path)) == 0:
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    if not os.path.exists(dir_path_content) or len(os.listdir(dir_path_content)) == 0:
         return
-    contents = os.listdir(existing_path)
+    contents = os.listdir(dir_path_content)
     for content in contents:
-        destination = os.path.join('./public', pathSrc, content.replace('.md','.html'))
-        content_path = os.path.join(existing_path, content)
+        destination = os.path.join(dest_dir_path, content.replace('.md','.html'))
+        content_path = os.path.join(dir_path_content, content)
         if os.path.isfile(content_path):
             generate_page(content_path,template_path,destination)
         else:
-            generate_pages(os.path.join(pathSrc, content))
+            generate_pages_recursive(content_path, template_path, destination)
 
 
 def main():
     copy_src_directory_to_destination()
-    generate_pages('')
+    generate_pages_recursive(dir_path_content, template_path, './public')
 
 main()
