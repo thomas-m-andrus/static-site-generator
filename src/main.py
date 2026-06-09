@@ -14,6 +14,8 @@ os.mkdir
 shutil.copy
 shutil.rmtree
 '''
+dir_path_content = "./content"
+template_path = "./template.html"
 
 def get_spaces(path: str):
     number_of_spaces = path.count('/')
@@ -40,7 +42,6 @@ def copy_src(pathSrc: str, pathDestination: str):
         else:
             copy_src(updated['src'], updated['destination'])
     
-
 def copy_src_directory_to_destination():
     print(os.listdir('.'))
     public_path = './public'
@@ -55,15 +56,20 @@ def copy_src_directory_to_destination():
 
 def generate_page(from_path:str, template_path:str, dest_path:str):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
-    from_file = open(from_path).read()
-    template_file = open(template_path,"r").read()
+
+    from_file_stream = open(from_path)
+    from_file = from_file_stream.read()
+    from_file_stream.close()
+
+    template_file_stream = open(template_path)
+    template_file = template_file_stream.read()
+    template_file_stream.close()
+
     md = markdown_to_html_node(from_file)
     html = md.to_html()
     title = extract_title(from_file)
     template_file = template_file.replace("{{ Title }}", title).replace("{{ Content }}",html)
-    print(template_file)
     path = os.path.dirname(dest_path)
-    print(path, os.path.exists(path))
     if path != '' and not os.path.exists(path):
         os.makedirs(path)
     try:
@@ -72,11 +78,22 @@ def generate_page(from_path:str, template_path:str, dest_path:str):
     except FileExistsError:
         print("The file already exists.")
         
-
+def generate_pages(pathSrc: str):
+    existing_path = os.path.join(dir_path_content, pathSrc)
+    if not os.path.exists(existing_path) or len(os.listdir(existing_path)) == 0:
+        return
+    contents = os.listdir(existing_path)
+    for content in contents:
+        destination = os.path.join('./public', pathSrc, content.replace('.md','.html'))
+        content_path = os.path.join(existing_path, content)
+        if os.path.isfile(content_path):
+            generate_page(content_path,template_path,destination)
+        else:
+            generate_pages(os.path.join(pathSrc, content))
 
 
 def main():
     copy_src_directory_to_destination()
-    generate_page("./content/index.md","./template.html","public/index.html")
+    generate_pages('')
 
 main()

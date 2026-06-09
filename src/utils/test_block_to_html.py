@@ -49,6 +49,10 @@ class TestBlockToHtml(unittest.TestCase):
 - **six**""",
                 "<ul><li>one</li><li>two</li><li>three</li><li>four</li><li>five</li><li><b>six</b></li></ul>"
             ],
+            [
+                "- [Why Glorfindel is More Impressive than Legolas](/blog/glorfindel)",
+                "<ul><li><a href=\"/blog/glorfindel\">Why Glorfindel is More Impressive than Legolas</a></li></ul>"
+            ],
                         [
 """1. one
 2. two
