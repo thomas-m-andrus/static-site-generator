@@ -56,18 +56,19 @@ def copy_src_directory_to_destination():
 def generate_page(from_path:str, template_path:str, dest_path:str):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     from_file = open(from_path).read()
-    template_file = open(template_path).read()
+    template_file = open(template_path,"r").read()
     md = markdown_to_html_node(from_file)
     html = md.to_html()
     title = extract_title(from_file)
-    template_file.replace('{{ Title }}', title).replace('{{ Content }}', html)
+    template_file = template_file.replace("{{ Title }}", title).replace("{{ Content }}",html)
+    print(template_file)
     path = os.path.dirname(dest_path)
     print(path, os.path.exists(path))
     if path != '' and not os.path.exists(path):
         os.makedirs(path)
     try:
         with open(dest_path, 'x') as f:
-            f.write(html)
+            f.write(template_file)
     except FileExistsError:
         print("The file already exists.")
         
