@@ -59,5 +59,18 @@ but I also like other stuff too # blessed
         for case in negative_cases:
             self.assertNotEqual(block_to_block_type(case), BlockType.ORDERED_LIST)
 
+    def test_quotes(self):
+        cases = [
+            """> This is my quote
+> also a quote
+> --from me
+""",
+"""> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien"""
+        ]
+        for case in cases:
+            self.assertEqual(block_to_block_type(case), BlockType.QUOTE)
+
 if __name__ == "__main__":
     unittest.main()

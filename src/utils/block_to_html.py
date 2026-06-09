@@ -33,6 +33,13 @@ def create_block_node(block:str):
             children = []
             for child in raw_children:
                 children.append(text_node_to_html_node(child))
+        case BlockType.QUOTE:
+            tag = 'blockquote'
+            cleaned = re.sub(r'(^> ?|\n>)','',block)
+            raw_children = text_to_textnodes(remove_redundant_space(cleaned))
+            children = []
+            for child in raw_children:
+                children.append(text_node_to_html_node(child))
         case BlockType.UNORDERED_LIST:
             tag = 'ul'
             children = compile_html_list_children("- ", block)

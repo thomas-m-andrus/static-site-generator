@@ -21,7 +21,7 @@ def block_to_block_type(block: str) -> BlockType:
         return BlockType.HEADING
     if re.match(r"^`{3}\n?(.|\n)+`{3}$", block):
         return BlockType.CODE
-    if re.fullmatch(r"^(> ?[^ ].*)\n?((> ?.+)\n?)*", block):
+    if re.fullmatch(r"^(> ?[^ ].*)\n?(((> .+)|>)\n?)*", block):
         return BlockType.QUOTE
     if re.fullmatch(r"^(- [^ ].*\s)*- .+", block):
         return BlockType.UNORDERED_LIST

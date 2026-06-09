@@ -86,6 +86,12 @@ class TestBlockToHtml(unittest.TestCase):
                 "####### title",
                 "<p>####### title</p>"
             ],
+            [
+"""> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien>""",
+"<blockquote>\"I am in fact a Hobbit in all but size.\" -- J.R.R. Tolkien></blockquote>"
+            ]
             
         ]
         for case,expected in cases:
