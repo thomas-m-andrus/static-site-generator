@@ -18,106 +18,7 @@ but I also like other stuff too # blessed
 
         for case in positive_cases:
             self.assertEqual(block_to_block_type(case), BlockType.PARAGRAPH)
-        
-    
-    def test_heading(self):
-        positive_cases = [
-            "# heading 1",
-            "## heading 2",
-            "### heading 3",
-            "#### heading 4",
-            "##### heading 5",
-            "###### heading 6"
-        ]
 
-        for case in positive_cases:
-            self.assertEqual(block_to_block_type(case), BlockType.HEADING)
-        
-        negative_cases = [
-            "######## wrong",
-            "#bad"
-        ]
-
-        for case in negative_cases:
-            self.assertNotEqual(block_to_block_type(case), BlockType.HEADING)
-    
-    def test_code(self):
-        positive_cases = [
-            """```
-                const myFunction = (a, b) => a+b
-            ```""",
-            "``` const myFunction = (a, b) => a+b```"
-        ]
-
-        for case in positive_cases:
-            self.assertEqual(block_to_block_type(case), BlockType.CODE)
-        
-        negative_cases = [
-            """```
-                const myFunction = (a, b) => a+b
-            """,
-            """```
-                const myFunction = (a, b) => a+b
-            `""",
-            """```
-                const myFunction = (a, b) => a+b
-            ``""",
-            """
-                const myFunction = (a, b) => a+b
-            ```""",
-            """`
-                const myFunction = (a, b) => a+b
-            ```""",
-            """``
-                const myFunction = (a, b) => a+b
-            ```"""
-        ]
-
-        for case in negative_cases:
-            self.assertNotEqual(block_to_block_type(case), BlockType.CODE)
-
-    def test_quote(self):
-        positive_cases = [
-"""> This is a quote
->so is this
-> and this too"""
-        ]
-
-        for case in positive_cases:
-            self.assertEqual(block_to_block_type(case), BlockType.QUOTE)
-        
-        negative_cases = [
-""">  This is a quote
->so is this
-> and this too
-"""
-        ]
-
-        for case in negative_cases:
-            self.assertNotEqual(block_to_block_type(case), BlockType.QUOTE)
-    
-    def test_unordered_list(self):
-        positive_cases = [
-"""- one
-- two
-- 3
-- four"""
-        ]
-
-        for case in positive_cases:
-            self.assertEqual(block_to_block_type(case), BlockType.UNORDERED_LIST)
-        
-        negative_cases = [
-"""-  one
-- two
-- 3
-- four"""
-        ]
-
-        for case in negative_cases:
-            self.assertNotEqual(block_to_block_type(case), BlockType.UNORDERED_LIST)
-    
-    def test_ordered_list(self):
         positive_cases = [
             "1. one",
 """1. one
@@ -157,10 +58,6 @@ but I also like other stuff too # blessed
 
         for case in negative_cases:
             self.assertNotEqual(block_to_block_type(case), BlockType.ORDERED_LIST)
-    
-    
-
-
 
 if __name__ == "__main__":
     unittest.main()

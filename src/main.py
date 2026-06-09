@@ -2,6 +2,8 @@ import os
 import re
 import shutil
 from textnode import TextNode
+from utils.block_to_html import markdown_to_html_node
+from utils.extract_title import extract_title
 
 '''
 os.path.exists
@@ -51,9 +53,28 @@ def copy_src_directory_to_destination():
     if static_exists:
         copy_src(static_path, public_path)
 
+def generate_page(from_path:str, template_path:str, dest_path:str):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    from_file = open(from_path).read()
+    template_file = open(template_path).read()
+    md = markdown_to_html_node(from_file)
+    html = md.to_html()
+    title = extract_title(md)
+    template_file.replace('{{ Title }}', title).replace('{{ Content }}', html)
+    path = os.path.dirname(dest_path)
+    if path != '':
+        os.makedirs(path)
+    try:
+        with open(dest_path, 'x') as f:
+            f.write(html)
+    except FileExistsError:
+        print("The file already exists.")
+        
+
 
 
 def main():
     copy_src_directory_to_destination()
+    generate_page("./content/index.md","./template.html","public/index.html")
 
 main()
